@@ -62,7 +62,8 @@ def write_new_html_file(animals_data):
 
 def main():
     try:
-        animals_data = load_data("Fox")
+        input_animal = input("Enter a name of an animal: ")
+        animals_data = load_data(input_animal)
         replace_info(animals_data)
         write_new_html_file(animals_data)
         print("Website was successfully generated to the file animals.html.")
