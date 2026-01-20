@@ -23,9 +23,13 @@ def read_html_data():
         return html_template
 
 
-def serialize_animal(animals_data):
+def serialize_animal(user_input, animals_data):
     """Serializes every animal for the html file"""
     output = ""
+
+    if not any(animal.get("name").lower() == user_input.lower() for animal in animals_data):
+        output += f"<h2 style='text-align: center; background-color: pink; padding: 10px; border-radius: 10px;'>The animal {user_input} doesn't exist.</h2>"
+
     for animal in animals_data:
         location_list = animal['locations']
         output += '<li class="cards__item">\n'
@@ -46,16 +50,16 @@ def serialize_animal(animals_data):
     return output
 
 
-def replace_info(animals_data):
+def replace_info(input_animal, animals_data):
     """Replaces the placeholder of html file to actual code"""
     html_template = read_html_data()
-    new_html = html_template.replace("__REPLACE_ANIMALS_INFO__", serialize_animal(animals_data))
+    new_html = html_template.replace("__REPLACE_ANIMALS_INFO__", serialize_animal(input_animal, animals_data))
     return new_html
 
 
-def write_new_html_file(animals_data):
+def write_new_html_file(input_animal, animals_data):
     """Creates the final html code"""
-    new_html = replace_info(animals_data)
+    new_html = replace_info(input_animal, animals_data)
     with open("animals.html", "w") as file:
         file.write(new_html)
 
@@ -64,8 +68,8 @@ def main():
     try:
         input_animal = input("Enter a name of an animal: ")
         animals_data = load_data(input_animal)
-        replace_info(animals_data)
-        write_new_html_file(animals_data)
+        replace_info(input_animal, animals_data)
+        write_new_html_file(input_animal, animals_data)
         print("Website was successfully generated to the file animals.html.")
     except FileNotFoundError as e:
         print(f"Couldn't find an important file! \n{e}")
