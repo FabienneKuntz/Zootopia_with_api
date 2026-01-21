@@ -1,19 +1,4 @@
-import requests
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-ANIMALS_API_KEY = os.getenv("ANIMALS_API_KEY")
-if not ANIMALS_API_KEY:
-    raise RuntimeError("ANIMALS_API_KEY is missing")
-
-
-def load_data(animal):
-  """Fetches information from the API"""
-  res = requests.get(f"https://api.api-ninjas.com/v1/animals?name={animal}&X-Api-Key={ANIMALS_API_KEY}")
-  animal_data = res.json()
-  return animal_data
+import data_fetcher
 
 
 def read_html_data():
@@ -66,10 +51,10 @@ def write_new_html_file(input_animal, animals_data):
 
 def main():
     try:
-        input_animal = input("Enter a name of an animal: ")
-        animals_data = load_data(input_animal)
-        replace_info(input_animal, animals_data)
-        write_new_html_file(input_animal, animals_data)
+        animal_name = input("Enter a name of an animal: ")
+        animals_data = data_fetcher.fetch_data(animal_name)
+        replace_info(animal_name, animals_data)
+        write_new_html_file(animal_name, animals_data)
         print("Website was successfully generated to the file animals.html.")
     except FileNotFoundError as e:
         print(f"Couldn't find an important file! \n{e}")
